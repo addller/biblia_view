@@ -1,0 +1,60 @@
+.Dialog_view{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: 
+        ' . . .'
+        ' . divDialog .'
+        ' . . .';
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0,0,0,.5) !important;
+    z-index: 999 !important;
+}
+
+.Dialog_divDialog{
+    grid-area: divDialog;
+    border: 4px solid wheat !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px blue !important;
+    width: clamp(250px, auto, 40rem) !important;
+    height: clamp(auto, 30rem, 60vh) !important;
+    min-width: 250px !important;
+    max-width: 40rem !important;
+    background-color: white !important;
+}
+
+.Dialog_textTitle{
+    font-size: 13pt;
+    border-bottom: 1px solid aquamarine !important;
+    padding: 8px 15px 3px !important;
+    text-align: center !important;
+    color: blue !important;
+}
+
+.Dialog_textMessage{
+    font-size: large !important;
+    text-indent: 15px !important;
+    color: black !important;
+    background-color: #eee !important;
+    padding: 5px !important;
+    margin: 4px !important;
+    text-align: justify !important;
+    border-radius: 3px !important;
+}
+
+.Dialog_groupButtons{
+    margin: 8px 5px 18px !important;
+}
+
+.Dialog_groupButtons input{
+    padding: 5px 18px;
+    margin: auto;
+    font-weight: bold;
+    float: right;
+    margin-left: 15px;
+    margin-bottom: 6px;
+}

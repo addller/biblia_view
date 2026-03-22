@@ -1,0 +1,42 @@
+.ViewEstudos_view{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3rem 6.5rem 3rem 1fr;
+    grid-template-areas:
+    'ViewEstudos_txtEstudos'
+    'ViewEstudos_divComandosEstudos'
+    'ViewEstudos_txtErrorAdicionarEstudo'
+    'ViewEstudos_divEstudos';
+    height: 100%;
+    gap: .1rem;
+}
+
+.ViewEstudos_txtEstudos{
+    grid-area: ViewEstudos_txtEstudos;
+    text-align: center;
+    position: relative;
+    bottom: .5rem;
+}
+
+.ViewEstudos_divComandosEstudos{
+    display: flex;
+    flex-direction: column;
+    grid-area: ViewEstudos_divComandosEstudos;
+    padding: .5rem;
+    border: 1px solid blue;
+    gap: .5rem;
+
+}   
+
+.ViewEstudos_txtErrorAdicionarEstudo{
+    grid-area: ViewEstudos_txtErrorAdicionarEstudo;
+    text-align: center;
+    margin: .2rem auto;
+    color: red;
+}
+
+.ViewEstudos_divEstudos{
+    grid-area: ViewEstudos_divEstudos;
+    border: 1px solid blue;
+}
+

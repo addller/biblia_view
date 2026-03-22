@@ -1,0 +1,38 @@
+.ViewIndex_view{
+    display: grid;
+    grid-template-columns: 35rem 1fr 1fr;
+    grid-template-rows: 3.6rem 1fr 2rem;
+    grid-template-areas: 
+    'ViewIndex_divMenu ViewIndex_divMenu ViewIndex_divMenu'
+    'ViewIndex_divPesquisa ViewIndex_divVersiculos ViewIndex_divEstudos'
+    'ViewIndex_divPesquisa ViewIndex_divVersiculos ViewIndex_divEstudos';
+    height: 99.7vh;
+    gap: .1rem;
+    font-size: medium;
+}
+
+.ViewIndex_divMenu {
+    grid-area: ViewIndex_divMenu;
+    text-align: center;
+    background-color: cyan;
+}
+
+.ViewIndex_divPesquisa {
+    overflow-y: scroll;
+    grid-area: ViewIndex_divPesquisa;
+}
+
+.ViewIndex_divVersiculos {
+    grid-area: ViewIndex_divVersiculos;
+    overflow-y: scroll;
+}
+
+.ViewIndex_divEstudos {
+    grid-area: ViewIndex_divEstudos;
+    overflow-y: scroll;
+}
+
+.ViewIndex_txtBiblia {
+    position: relative;
+    bottom: .5rem;
+}

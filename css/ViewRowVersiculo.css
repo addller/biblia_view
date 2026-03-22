@@ -1,0 +1,16 @@
+.ViewRowVersiculo_view:nth-child(even){
+    background-color: #eee;
+    margin-bottom: .5rem;
+}
+
+.ViewRowVersiculo_spanExcluir,
+.ViewRowVersiculo_spanSelecionar{
+    position: relative;
+    top: .2rem;
+}
+
+.ViewRowVersiculo_txtVersiculo{
+    position: relative;
+    bottom: .6rem;
+    
+}

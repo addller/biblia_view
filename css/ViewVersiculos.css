@@ -1,0 +1,42 @@
+.ViewVersiculos_view{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3rem 2fr 3rem 1fr;
+    grid-template-areas:
+    'ViewVersiculos_txtVersiculosLinkados'
+    'ViewVersiculos_divVersiculosLinkados'
+    'ViewVersiculos_txtVersiculosSelecionados'
+    'ViewVersiculos_divVersiculosSelecionados';
+    height: 100%;
+    gap: .1rem;
+}
+
+.ViewVersiculos_txtVersiculosLinkados{
+    grid-area: ViewVersiculos_txtVersiculosLinkados;
+}
+
+.ViewVersiculos_txtVersiculosSelecionados{
+    grid-area: ViewVersiculos_txtVersiculosSelecionados;
+
+}
+
+.ViewVersiculos_txtVersiculosLinkados,
+.ViewVersiculos_txtVersiculosSelecionados{
+    text-align: center;
+    position: relative;
+    bottom: .5rem;
+}
+
+.ViewVersiculos_divVersiculosLinkados{
+    grid-area: ViewVersiculos_divVersiculosLinkados;
+    padding: .5rem;
+    border: 1px solid blue;
+    text-align: justify;
+}
+
+.ViewVersiculos_divVersiculosSelecionados{
+    grid-area: ViewVersiculos_divVersiculosSelecionados;
+    padding: .5rem;
+    border: 1px solid blue;
+    text-align: justify;
+}

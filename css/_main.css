@@ -1,0 +1,171 @@
+html{
+    font-size: 62.5%;
+}
+
+body{
+    height: 99.4vh;
+    padding: 1px;
+    margin: 1px;
+    font-size: 1.5rem;
+}
+
+.ViewInitialize_view{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 20rem 1fr 1fr;
+    grid-template-rows: 3.6rem 1fr 2rem;
+    grid-template-areas: 
+        'menu menu menu'
+        'navigation content content'
+        'navigation footer footer';
+    
+    gap: .1rem;
+}
+
+.ViewInitialize_menu,
+.ViewInitialize_navigation,
+.ViewInitialize_content,
+.ViewInitialize_footer{
+    border: 1px solid #aaa;
+}
+
+.ViewInitialize_menu{
+    grid-area: menu;
+}
+
+.ViewInitialize_navigation{
+    overflow-y: scroll;
+    grid-area: navigation;
+}
+
+.ViewInitialize_content{
+    overflow-y: scroll;
+    grid-area: content;
+}
+
+.ViewInitialize_footer{
+    grid-area: footer;
+}
+
+.ViewInitialize_menu{
+    background-image: radial-gradient(circle, #00d4ff 0%, white 100%);
+}
+
+.fontColorRed{
+    color: red;
+}
+.fontColorGreen{
+    color: #009933;
+}
+
+.fontColorBlue{
+    color:blue;
+}
+
+.edit,
+.delete,
+.details,
+.sprite{
+    display: inline-block;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    zoom: .8;
+    position: relative;
+    cursor: pointer;
+    border-top: 2px solid rgba(0,0,0,0);
+}
+
+.sprite:hover{
+    border-top: 2px solid #ccc;
+}
+
+.delete{
+    background: url(../img/sprite_icons_m.png);
+    background-position: -80px -120px;    
+}
+
+.delete:hover{
+    border-top: 2px solid #d00;
+}
+
+.edit{
+    background: url(../img/sprite_icons_m.png);
+    background-position: -18px -157px;    
+}
+
+.edit:hover{
+    border-top: 2px solid yellow;
+}
+
+.details{
+    background: url(../img/sprite_icons_m.png);
+    background-position: -225px -83px;    
+}
+
+.details:hover{
+    border-top: 2px solid green;
+}
+
+.spanSort{
+    background: url(../img/sprite_icons_m.png);
+    background-position:  -291.5px -423px;
+}
+
+.spanSort:hover{
+    border-top: 2px solid #00f;
+}
+
+.spanAdd{
+    background: url(../img/sprite_icons_m.png);
+    background-position:  -112px -13px;
+}
+
+.destaque:hover{
+    background-color: rgb(248, 250, 124);
+}
+
+.selectVersiculo{
+    background: url(../img/sprite_icons_m.png);
+    background-position:  -406px -51px;
+}
+
+.cssValidateView{
+    border: 1px solid black;
+    color: red;
+    margin: 5px 10px;
+    border-radius: 5px;
+}
+
+.cssValidateLi{
+    color: red;
+    padding: 2px 5px 2px 10px;
+    list-style-type: decimal;
+}
+
+.pointer{
+    cursor:pointer;
+}
+
+.JTable_zebrar{
+    background-color: #ddd;
+}
+
+.Validation_errorGroup{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    color: red;
+    padding: 1rem;
+    gap: .5rem;
+}
+
+.Validation_elementError{
+    margin: 0;
+}
+
+input[type=button],
+input[type=submit]{
+    padding: .4rem;
+    font-weight: bold;
+}

@@ -1,0 +1,84 @@
+.ViewPesquisa_view{
+    border: 1px solid blue;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 17rem 1fr;
+    grid-template-areas:
+    'ViewPesquisa_divComandosLivro'
+    'ViewPesquisa_divVersiculos';
+    height: 100%;
+    gap: .1rem;
+}
+
+.ViewPesquisa_txtPesquisa{
+    text-align: center;
+    padding-top: 1rem;
+    margin: .3rem;
+}
+
+.ViewPesquisa_divComandosLivroTitulo,
+.ViewPesquisa_divComandosLivroCapitulo{
+    margin-bottom: .5rem;
+}
+
+.ViewPesquisa_divComandosLivro{
+    padding: .5rem 0 1rem 1rem;
+    grid-area: ViewPesquisa_divComandosLivro;
+
+}
+
+
+.ViewPesquisa_spanLivro, 
+.ViewPesquisa_spanCapitulo{
+    margin-right: .3rem;
+}
+
+.ViewPesquisa_inputSelectLivros{
+    width: clamp(8rem, 28rem, 100%);
+    text-indent: .3rem;
+    
+}
+
+.ViewPesquisa_inputNumeroCapitulo{
+    width: 8rem;
+    text-align: right;
+}
+
+.ViewPesquisa_spanCapitulos{
+    padding-left: 1rem;
+}
+
+.ViewPesquisa_spanFiltro1,
+.ViewPesquisa_spanFiltro2{
+    padding-right: 1rem;
+}
+
+.ViewPesquisa_inputBuscarNoLivro,
+.ViewPesquisa_inputBuscarEmTodosOsLivros{
+    width: clamp(8rem, 24.7rem, 100%);
+    text-indent: .3rem;
+    
+}
+
+.ViewPesquisa_txtTotalVersiculos{
+    margin: .5rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.ViewPesquisa_divVersiculos{
+    grid-area: ViewPesquisa_divVersiculos;
+    overflow-y: scroll;
+    border-top: 1px solid blue;
+    text-align: justify;
+}
+
+.ViewPesquisa_view .ViewRowVersiculo_view{
+    padding: 0 1rem;
+    
+}
+
+
+
+
