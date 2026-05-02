@@ -15,5 +15,9 @@ class ViewVersiculos extends JView{
         
     }
 
+    updateCountVersiculosLinkados(total){
+        this.$txtVersiculosLinkados.t('Versiculos linkados: '+total)
+    }
+
 
 }

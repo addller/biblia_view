@@ -8,6 +8,13 @@ class ViewPesquisa extends JView{
         A.div().a(
             A.div('divComandosLivro').a(
                 A.p('txtPesquisa').t('Pesquisa'),
+                A.div('divFiltros').a(
+                    A.span('spanFiltro1').t('Filtro 1'),
+                    A.inputText('inputBuscarNoLivro').p('Buscar no livro'),
+                    E.br(),
+                    A.span('spanFiltro2').t('Filtro 2'),
+                    A.inputText('inputBuscarEmTodosOsLivros').p('Buscar em todos os livros - at: e nt:')
+                ),
                 A.div('divComandosLivroTitulo').a(
                     A.span('spanLivro').t('Livro'),
                     A.inputSelect('inputSelectLivros'),
@@ -16,13 +23,6 @@ class ViewPesquisa extends JView{
                     A.span('spanCapitulo').t('Capítulo'),
                     A.inputNumber('inputNumeroCapitulo'),
                     A.span('spanCapitulos')
-                ),
-                A.div('divFiltros').a(
-                    A.span('spanFiltro1').t('Filtro 1'),
-                    A.inputText('inputBuscarNoLivro').p('Buscar no livro'),
-                    E.br(),
-                    A.span('spanFiltro2').t('Filtro 2'),
-                    A.inputText('inputBuscarEmTodosOsLivros').p('Buscar em todos os livros')
                 ),
                 A.p('txtTotalVersiculos').t('Total de versículos: 0'),
             ),
@@ -39,4 +39,13 @@ class ViewPesquisa extends JView{
         this.$txtTotalVersiculos.t(`Total de versículos: ${total}`)
     }
 
+    appendVersiculo(viewRowVersiculo){
+        this.$divVersiculos.a(viewRowVersiculo)
+    }
+
+    rolarParaPrimeiroVersiculo(){
+        if(this.$divVersiculos.children.length > 0){
+            this.$divVersiculos.children[0].scrollIntoView({behavior: 'smooth'})
+        }
+    }
 }

@@ -5,6 +5,8 @@ class APIBiblia extends APIBase{
     static TEXT_SEARCH = 'textSearch'
     static IMG_PERFIL = 'imgPerfil'
     static CLIENT_ID = 'clientId'
+    static ESTUDO = 'estudo'
+    static FITILHO = 'fitilho'
 
     constructor(){super('http://localhost:22765/api')}
 
@@ -15,6 +17,14 @@ class APIBiblia extends APIBase{
     getImagePerfil = () => JSON.parse(this.getInfo(APIBiblia.IMG_PERFIL))
     setImagePerfil = imagePerfil => this.setInfo(APIBiblia.IMG_PERFIL, JSON.stringify(imagePerfil))
     removeImagePerfil = () => this.removeInfo(APIBiblia.IMG_PERFIL)
+
+    getFitilho = () => JSON.parse(this.getInfo(APIBiblia.FITILHO))
+    setFitilho = fitilho => this.setInfo(APIBiblia.FITILHO, JSON.stringify(fitilho))
+    removeFitilho = () => this.removeInfo(APIBiblia.FITILHO)
+
+    getEstudo = () => JSON.parse(this.getInfo(APIBiblia.ESTUDO))
+    setEstudo = estudo => this.setInfo(APIBiblia.ESTUDO, JSON.stringify(estudo))
+    removeEstudo = () => this.removeInfo(APIBiblia.ESTUDO)
 
     getUserId = () => this.getUser().userId_
 
@@ -28,6 +38,7 @@ class APIBiblia extends APIBase{
     toLivro = fragment => this.toResource('livros', fragment)
     toVersiculos = fragment => this.toResource('versiculos', fragment)
     toEstudos = fragment => this.toResource('estudos', fragment)
+    toAnotacoes = fragment => this.toResource('anotacoes', fragment)
 }
 
 class APIViewBiblia extends APIBase{

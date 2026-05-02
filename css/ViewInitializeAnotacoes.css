@@ -1,0 +1,12 @@
+.ViewInitialize_view{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 40rem 1fr 1fr;
+    grid-template-rows: 3.6rem 1fr 2rem;
+    grid-template-areas: 
+        'menu menu menu'
+        'navigation content content'
+        'navigation footer footer';
+    
+    gap: .1rem;
+}

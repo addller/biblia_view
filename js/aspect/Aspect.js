@@ -12,7 +12,9 @@ class Aspect{
             ['JWT strings must contain exactly 2 period characters', _ => ActionsLogin.unlog()],
             ['JWT expired', _ => ActionsLogin.unlog()],
             ['Expired or invalid token', _ => ActionsLogin.unlog()],
-            ['JWT String argument cannot be null or empty', _ => ActionsLogin.unlog()]
+            ['JWT String argument cannot be null or empty', _ => ActionsLogin.unlog()],
+            ['Anotação já existe', _ => toast('Já existe uma anotação com esse título')],
+            ['O novo texto não corresponde ao texto atual', _ => toast('O novo texto não corresponde ao texto atual do versículo')]
         )
     }
 

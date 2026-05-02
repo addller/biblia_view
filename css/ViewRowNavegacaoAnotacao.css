@@ -1,0 +1,25 @@
+.ViewRowNavegacaoAnotacao_view{
+    display: flex;
+    border: 1px solid blue;
+    gap: .5rem;
+    align-items: center;
+    margin-bottom: .3rem;
+    padding: .5rem
+}
+
+.ViewRowNavegacaoAnotacao_view:nth-child(even){
+    background-color: #eee;
+}
+
+.ViewRowNavegacaoAnotacao_txtTitulo{
+    flex-grow: 1;
+    cursor: pointer;
+    overflow-y: scroll;
+}
+
+.ViewRowNavegacaoAnotacao_backgroundLightGreen{
+    background-color: lightgreen !important;
+}
+
+
+

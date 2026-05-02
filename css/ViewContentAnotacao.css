@@ -1,0 +1,124 @@
+.ViewContentAnotacao_view{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
+    gap: .1rem;
+}
+
+.ViewContentAnotacao_groupFieldsConfigAnotacao{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+    'ViewContentAnotacao_divAnotacao ViewContentAnotacao_divVersiculos';
+    gap: .5rem;
+    height: calc(100% - 3.5rem);
+}
+
+.ViewContentAnotacao_groupFieldsConfigEdicao{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas:
+    'ViewContentAnotacao_divEditTexto ViewContentAnotacao_divVersiculos';
+    gap: .5rem;
+    height: calc(100% - 3.5rem);
+}
+
+.ViewContentAnotacao_divControles{
+    border: 1px solid blue;
+}
+
+.ViewContentAnotacao_txtAnotacao{
+    border: 1px solid blue;
+    margin: 0;
+    padding: .5rem;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+.ViewContentAnotacao_view .sprite{
+    position: relative;
+    top: .4rem;
+    margin-right: 1rem;
+}
+
+.ViewContentAnotacao_txtTitulo,
+.ViewContentAnotacao_lblAnotacao{
+    position: relative;
+    bottom: .5rem;
+}
+
+.ViewContentAnotacao_spanEditar{
+    margin-left: 2rem;
+}
+
+.ViewContentAnotacao_inputEditTexto{
+    width: calc(100% - 2rem);
+    height: calc(100% - 5rem);
+    display: block;
+    margin: auto;
+    margin-top: .5rem;
+    font-size: large;
+}
+
+.ViewContentAnotacao_btnSalvarAnotacao{
+    width: calc(100% - 1.2rem);
+    margin: auto;
+    display: block;
+    margin-top: .3rem;
+}
+
+.ViewContentAnotacao_linhaAnotacao{
+    text-align: justify;
+    text-indent: 2rem;
+    margin: 0;
+    padding: .5rem 1rem .5rem 1rem;
+}
+
+.ViewContentAnotacao_inputEditTitulo{
+    width: calc(100% - 14rem);
+    height: 2.4rem;
+    margin-left: .5rem;
+}
+
+.ViewContentAnotacao_btnSalvarTitulo{
+    width: 10rem;
+    margin: .5rem 0 .5rem 1.7rem;
+
+}
+
+.ViewContentAnotacao_divEditTexto{
+    grid-area: ViewContentAnotacao_divEditTexto;
+    height: 100%;
+    color:red;
+    overflow-y: scroll;
+}
+
+.ViewContentAnotacao_divAnotacao{
+    grid-area: ViewContentAnotacao_divAnotacao;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.ViewContentAnotacao_divVersiculos{
+    grid-area: ViewContentAnotacao_divVersiculos;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.ViewContentAnotacao_divEditTexto,
+.ViewContentAnotacao_divAnotacao,
+.ViewContentAnotacao_divVersiculos{
+    border: 1px solid black;
+}
+
+.ViewContentAnotacao_txtVersiculos{
+    text-align: center;
+    margin: 0;
+    padding: 1rem;
+    background-color: bisque;
+    border: 1px solid blue;
+    
+}

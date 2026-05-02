@@ -22,4 +22,8 @@ class ViewEstudos extends JView{
         this.$txtErrorAdicionarEstudo.t(error)
     }
 
+    updateNumeroEstudos(quantidade){
+        this.$txtEstudos.t(`Estudos: (${quantidade})`)
+    }
+
 }

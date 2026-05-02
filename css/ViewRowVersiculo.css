@@ -1,16 +1,50 @@
-.ViewRowVersiculo_view:nth-child(even){
-    background-color: #eee;
+.ViewRowVersiculo_view{
+    padding-bottom: 1rem;
     margin-bottom: .5rem;
+    padding: 1rem;
 }
 
+.ViewRowVersiculo_view:nth-child(even){
+    background-color: #eee;
+}
+
+.ViewRowVersiculo_view:hover{
+    background-color: aquamarine;
+}
+
+
+
 .ViewRowVersiculo_spanExcluir,
+.ViewRowVersiculo_spanEditText,
 .ViewRowVersiculo_spanSelecionar{
     position: relative;
     top: .2rem;
 }
 
+.ViewRowVersiculo_spanEditText{
+    margin-right: 1rem;
+}
+
+.ViewRowVersiculo_txtInfo,
 .ViewRowVersiculo_txtVersiculo{
     position: relative;
-    bottom: .6rem;
-    
+    bottom: .4rem;
 }
+
+.ViewRowVersiculo_txtInfo{
+    margin-left: 1rem;
+}
+
+.ViewRowVersiculo_inputEditText{
+    width: calc(100% - 2rem);
+    margin: auto;
+    height: 6rem;
+}
+
+.ViewRowVersiculo_btnEditText{
+    
+    margin-top: .3rem;
+    width: calc(100% - 1.2rem);
+}
+
+

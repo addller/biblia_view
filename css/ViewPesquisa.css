@@ -2,7 +2,7 @@
     border: 1px solid blue;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 17rem 1fr;
+    grid-template-rows: 18rem 1fr;
     grid-template-areas:
     'ViewPesquisa_divComandosLivro'
     'ViewPesquisa_divVersiculos';
@@ -34,8 +34,9 @@
 }
 
 .ViewPesquisa_inputSelectLivros{
-    width: clamp(8rem, 28rem, 100%);
+    margin-left: 2.5rem;
     text-indent: .3rem;
+    width: calc(100% - 8.3rem);
     
 }
 
@@ -57,6 +58,7 @@
 .ViewPesquisa_inputBuscarEmTodosOsLivros{
     width: clamp(8rem, 24.7rem, 100%);
     text-indent: .3rem;
+    margin-bottom: .5rem;
     
 }
 
@@ -72,11 +74,6 @@
     overflow-y: scroll;
     border-top: 1px solid blue;
     text-align: justify;
-}
-
-.ViewPesquisa_view .ViewRowVersiculo_view{
-    padding: 0 1rem;
-    
 }
 
 

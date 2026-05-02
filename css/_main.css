@@ -62,6 +62,26 @@ body{
     color:blue;
 }
 
+.error{
+    color: red;
+}
+
+.show{
+    display: block;
+}
+
+.hide{
+    display: none;
+}
+
+.hidden_visibility{
+    visibility: hidden;
+}
+
+.show_visibility{
+    visibility: visible;
+}
+
 .edit,
 .delete,
 .details,
@@ -168,4 +188,30 @@ input[type=button],
 input[type=submit]{
     padding: .4rem;
     font-weight: bold;
+}
+
+.fimVersiculos{
+    text-align: center;
+    color: blue;
+}
+
+.centerText{
+    text-align: center;
+}
+
+.identForAnotacao{
+    text-indent: 2rem;
+    padding: .5rem 1rem;
+}
+
+.identForAnotacao:nth-child(even){
+    background-color: #eee;
+}
+
+.cursorPointer{
+    cursor: pointer;
+}
+
+.cursorDefault{
+    cursor: default;
 }

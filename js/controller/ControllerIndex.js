@@ -1,16 +1,15 @@
-class ControllerIndex extends JMount{
+class ControllerIndex extends JMount {
     constructor() {
         super(
             {
-                livros:[],
-                versiculosSelecionados:[],
+                livros: [],
+                versiculosSelecionados: [],
                 totalVersiculos: 0,
                 loadEstudos: false,
                 estudos: [],
                 estudoAberto: null
             }
-        ).mount_()
-        
+        ).mount_()  
     }
 
     _init() {
@@ -29,12 +28,12 @@ class ControllerIndex extends JMount{
 
     }
 
-    _requests(){
+    _requests() {
         this.requestLivros()
         this.requestEstudos()
     }
 
-    _events(){
+    _events() {
         this.eventSelectLivro()
         this.eventUpdateNumeroCapitulo()
         this.eventPesquisaGeral()
@@ -43,57 +42,64 @@ class ControllerIndex extends JMount{
         this.eventPesquisarEstudos()
     }
 
-    requestLivros(){
-        
+    requestLivros() {
+
         let enderessable = API_BIBLIA.toLivro();
-        
+
         JRequest.prepare(enderessable)
             .inResponse(
                 livros => {
+                    livros.sort((a, b) => a.id - b.id)
                     this.loadLivros(livros)
+                    this.loadFitilho()
                 },
                 error => {
                     new Aspect(error)
                 }
-        ).get()
+            ).get()
     }
 
-    loadLivros(livros){
-        
+    loadLivros(livros) {
+
         let inputSelectLivros = this.viewPesquisa.$inputSelectLivros;
 
         livros.forEach(livro => {
             inputSelectLivros.a(A.inputOption('optLivro' + livro.id).otv(livro.titulo, livro.id))
             this.livros.push(livro)
         })
-        this.selectedLivro = livros[0]
-        this.updateFieldNumeroCapitulos()
-        this.getVersiculos()
+
+        if(!this.loadFitilho()){
+            this.selectedLivro = livros[0]
+            this.updateFieldNumeroCapitulos()
+            this.getVersiculos()
+        }
+
 
     }
 
-    eventSelectLivro(){
+    eventSelectLivro() {
 
-        this.viewPesquisa.$inputSelectLivros.onchange = e =>{
+        this.viewPesquisa.$inputSelectLivros.onchange = e => {
             let livroId = e.target.value
             this.selectedLivro = this.livros.filter(livro => livro.id == livroId)[0]
+            this.viewPesquisa.$inputNumeroCapitulo.value = 1
             this.updateFieldNumeroCapitulos()
             this.getVersiculos()
         }
     }
 
-    updateFieldNumeroCapitulos(){
+    updateFieldNumeroCapitulos() {
         let numeroCapitulos = this.selectedLivro.capitulos;
 
         this.viewPesquisa.$spanCapitulos.t(`de ${numeroCapitulos}`)
         this.viewPesquisa.$inputNumeroCapitulo.max = numeroCapitulos
     }
 
-    getVersiculos(){
+    getVersiculos() {
 
-        let params = {idLivro: this.selectedLivro.id, capitulo: this.viewPesquisa.$inputNumeroCapitulo.value},
+        let params = { idLivro: this.selectedLivro.id, capitulo: this.viewPesquisa.$inputNumeroCapitulo.value },
             enderessable = API_BIBLIA.toVersiculos(params);
-        
+
         JRequest.prepare(enderessable)
             .inResponse(
                 versiculos => {
@@ -102,59 +108,127 @@ class ControllerIndex extends JMount{
                     this.viewPesquisa.updateTotalVersiculos(this.totalVersiculos)
                 },
                 error => new Aspect(error),
-        ).get()
+            ).get()
     }
 
-    populateVersiculos(versiculos){
-        let divVersiculos = this.viewPesquisa.$divVersiculos;
+    populateVersiculos(versiculos, removeEdit) {
+        let divVersiculos = this.viewPesquisa.$divVersiculos,
+            versiculoToRoll;
         removeChildren(divVersiculos)
+
+        versiculos.sort((a, b) => a.id - b.id)
+        
 
         versiculos.forEach(versiculo => {
             let viewRowVersiculo = new ViewRowVersiculo(versiculo);
-            viewRowVersiculo.$spanExcluir.style.display = 'none'
-            this.viewPesquisa.$divVersiculos.a(viewRowVersiculo)
+            viewRowVersiculo.hideSpanExcluir()
+            this.viewPesquisa.appendVersiculo(viewRowVersiculo)
             this.eventSelectVersiculo(viewRowVersiculo)
+            this.eventEditTextoVersiculo(viewRowVersiculo)
+            this.requestUpdateTextoVersiculo(viewRowVersiculo)
+            this.navigateToLivroCapituloVersiculo(viewRowVersiculo)
+            removeEdit && disapend(viewRowVersiculo.$spanEditText)
+            if(versiculo.id == this.currentIdVersiculoSelecionado){
+                versiculoToRoll = viewRowVersiculo;
+            }
         })
+        this.viewPesquisa.appendVersiculo(E.p().t('---').c('fimVersiculos'))
         this.viewPesquisa.updateTotalVersiculos(versiculos.length)
+        if(versiculoToRoll){
+            versiculoToRoll.$view.scrollIntoView({behavior: 'smooth'})
+        }else{
+            this.viewPesquisa.rolarParaPrimeiroVersiculo()
+        }
+        this.setFitilho()
     }
 
-    eventUpdateNumeroCapitulo(){
-        this.viewPesquisa.$inputNumeroCapitulo.onchange = _ => {
-            this.getVersiculos()
+    eventEditTextoVersiculo(viewRowVersiculo) {
+        viewRowVersiculo.$spanEditText.onclick = _ => {
+            viewRowVersiculo.showFormEditText = !viewRowVersiculo.showFormEditText;
+
+            if (viewRowVersiculo.showFormEditText) {
+
+                if (
+                    this.currentViewRowVersiculo
+                    && this.currentViewRowVersiculo !== viewRowVersiculo
+                    && this.currentViewRowVersiculo.showFormEditText
+                ) {
+                    this.currentViewRowVersiculo.$spanEditText.click();
+                }
+                this.currentViewRowVersiculo = viewRowVersiculo;
+                show(viewRowVersiculo.$formEditText)
+            } else {
+                hide(viewRowVersiculo.$formEditText)
+            }
+        }
+
+    }
+
+    requestUpdateTextoVersiculo(viewRowVersiculo) {
+        viewRowVersiculo.$formEditText.onsubmit = e => {
+        consume(e)
+        let textoVersiculo = viewRowVersiculo.$inputEditText.value;
+
+            let title = "Confirme o texto da edição",
+                message = textoVersiculo;
+            new Dialog(message, title, () => {
+                let enderessable = API_BIBLIA.toVersiculos(`${viewRowVersiculo.id}/texto`);
+                JRequest.prepare(enderessable, textoVersiculo, 'plain/text')
+                    .inResponse(
+                        _ => {
+                            viewRowVersiculo.$txtVersiculo.t(textoVersiculo)
+                            viewRowVersiculo.$spanEditText.click();
+                        },
+                        error => new Aspect(error)
+                    ).put()
+            }).show();
+        
+        }
+
+    }
+
+    eventUpdateNumeroCapitulo() {
+        this.viewPesquisa.$inputNumeroCapitulo.onchange = _ => this.getVersiculos()
+        this.viewPesquisa.$inputNumeroCapitulo.onkeypress = e => {
+            if (e.key == 'Enter') {
+                this.getVersiculos()
+            }
         }
     }
 
-    eventPesquisaGeral(){
+    eventPesquisaGeral() {
 
         let inputBuscarEmTodosOsLivros = this.viewPesquisa.$inputBuscarEmTodosOsLivros;
 
         inputBuscarEmTodosOsLivros.onkeypress = e => {
             let texto = inputBuscarEmTodosOsLivros.value;
 
-            if(e.key == 'Enter' && texto){
+            if (e.key == 'Enter' && texto) {
                 let fragment = {
                     subPath: 'pesquisa/geral',
                     texto
                 }
 
                 let enderessable = API_BIBLIA.toVersiculos(fragment);
-                
+
                 JRequest.prepare(enderessable)
                     .inResponse(
-                        versiculos => this.populateVersiculos(versiculos),
+                        versiculos => {
+                            this.populateVersiculos(versiculos, true)
+                        },
                         error => new Aspect(error),
-                ).get()
+                    ).get()
             }
-            
+
         }
 
     }
 
-    eventPesquisaNoLivro(){
+    eventPesquisaNoLivro() {
         let inputBuscaNoLivro = this.viewPesquisa.$inputBuscarNoLivro;
         inputBuscaNoLivro.onkeypress = e => {
             let texto = inputBuscaNoLivro.value;
-            if(e.key == 'Enter' && texto){
+            if (e.key == 'Enter' && texto) {
                 let fragment = {
                     subPath: 'pesquisa/livro',
                     livroId: this.selectedLivro.id,
@@ -162,71 +236,75 @@ class ControllerIndex extends JMount{
                 }
 
                 let enderessable = API_BIBLIA.toVersiculos(fragment);
- 
+
                 JRequest.prepare(enderessable)
                     .inResponse(
-                        versiculos => this.populateVersiculos(versiculos),
+                        versiculos => this.populateVersiculos(versiculos, true),
                         error => new Aspect(error)
-                ).get()
+                    ).get()
             }
         }
     }
 
-    eventSelectVersiculo(viewRowVersiculo){
+    eventSelectVersiculo(viewRowVersiculo) {
         viewRowVersiculo.$spanSelecionar.onclick = _ => {
             let hasVersiculo = this.versiculosSelecionados
                 .filter(versiculo => versiculo.id == viewRowVersiculo.id)
                 .length > 0;
 
-            if(hasVersiculo) return;
-            let {id, verso, texto} = viewRowVersiculo;
-            let viewRowVersiculoSelected = new ViewRowVersiculo({id, verso, texto});
-            viewRowVersiculoSelected.$spanSelecionar.style.display = 'none'
+            if (hasVersiculo) return;
+            let { id, verso, texto } = viewRowVersiculo;
+            let viewRowVersiculoSelected = new ViewRowVersiculo({ id, verso, texto });
+            viewRowVersiculoSelected.hideSpanSelecionar()
+            viewRowVersiculoSelected.hideSpanEditText()
             this.viewVersiculos.$divVersiculosSelecionados.a(viewRowVersiculoSelected)
-            this.versiculosSelecionados.push({id, verso, texto})
-            this.eventRemoveSelectedVersiculo(viewRowVersiculoSelected)   
+            this.versiculosSelecionados.push({ id, verso, texto })
+            this.eventRemoveSelectedVersiculo(viewRowVersiculoSelected)
         }
     }
 
-    eventRemoveSelectedVersiculo(viewRowVersiculo){
+    eventRemoveSelectedVersiculo(viewRowVersiculo) {
         viewRowVersiculo.$spanExcluir.onclick = _ => {
             this.versiculosSelecionados = this.versiculosSelecionados.filter(versiculo => versiculo.id != viewRowVersiculo.id)
             disapend(viewRowVersiculo)
         }
     }
 
-    eventAdicionarEstudo(){
+    eventAdicionarEstudo() {
 
         let inputAdicionarEstudo = this.viewEstudos.$inputAdicionarEstudo;
 
         inputAdicionarEstudo.onkeypress = e => {
             let titulo = inputAdicionarEstudo.value;
 
-            if(e.key == 'Enter' && titulo && this.loadEstudos){    
-                    
+            if (e.key == 'Enter' && titulo && this.loadEstudos) {
+
                 let hasEstudo = this.estudos.filter(estudo => estudo.titulo.toLowerCase() == titulo.toLowerCase()).length > 0;
-                if(hasEstudo){
+                if (hasEstudo) {
                     this.viewEstudos.$txtErrorAdicionarEstudo.t('Já existe um estudo com esse título.')
                     return;
                 }
-    
+
                 let enderessable = API_BIBLIA.toEstudos();
-                JRequest.prepare(enderessable, {titulo})
+                JRequest.prepare(enderessable, { titulo })
                     .inResponse(
-                        estudo => this.populateViewRowEstudos(estudo),
+                        estudo => {
+                            this.populateViewRowEstudos(estudo, true)
+                            inputAdicionarEstudo.value = '';
+                        },
                         error => new Aspect(error)
-                ).post()
-                
+                    ).post()
+
             }
 
         }
 
     }
 
-    requestEstudos(){
-        
+    requestEstudos() {
+
         let enderessable = API_BIBLIA.toEstudos();
-        
+
         JRequest.prepare(enderessable)
             .inResponse(
                 estudos => {
@@ -234,13 +312,13 @@ class ControllerIndex extends JMount{
                     estudos.forEach(estudo => this.populateViewRowEstudos(estudo))
                 },
                 error => new Aspect(error),
-        ).get()
+            ).get()
     }
 
-    eventAddVersiculosAoEstudo(viewRowEstudo){
+    eventAddVersiculosAoEstudo(viewRowEstudo) {
         viewRowEstudo.$spanAdicionarVersiculos.onclick = _ => {
             let versiculosIds = this.versiculosSelecionados.map(versiculo => versiculo.id);
-            if(versiculosIds.length > 0){
+            if (versiculosIds.length > 0) {
                 let fragment = {
                     subPath: `${viewRowEstudo.id}/versiculos`,
                 }
@@ -251,15 +329,15 @@ class ControllerIndex extends JMount{
                         _ => {
                             this.versiculosSelecionados = [];
                             removeChildren(this.viewVersiculos.$divVersiculosSelecionados)
-                            debugger
+                            viewRowEstudo.$spanVerVersiculos.click()
                         },
                         error => new Aspect(error),
-                ).put()
+                    ).put()
             }
         }
     }
 
-    eventGetVersiculosEstudo(viewRowEstudo){
+    eventGetVersiculosEstudo(viewRowEstudo) {
 
         viewRowEstudo.$spanVerVersiculos.onclick = _ => {
             let fragment = {
@@ -267,7 +345,7 @@ class ControllerIndex extends JMount{
             }
 
             let enderessable = API_BIBLIA.toEstudos(fragment);
-            
+
             JRequest.prepare(enderessable)
                 .inResponse(
                     versiculos => {
@@ -275,18 +353,22 @@ class ControllerIndex extends JMount{
                         removeChildren(this.viewVersiculos.$divVersiculosLinkados)
                         versiculos.forEach(versiculo => {
                             let viewRowVersiculo = new ViewRowVersiculo(versiculo);
-                            viewRowVersiculo.$spanSelecionar.style.display = 'none'
+                            viewRowVersiculo.hideSpanSelecionar()
+                            viewRowVersiculo.hideSpanEditText()
                             this.viewVersiculos.$divVersiculosLinkados.a(viewRowVersiculo)
                             this.requestDeleteVersiculoEstudo(viewRowVersiculo, viewRowEstudo)
+                            this.navigateToLivroCapituloVersiculo(viewRowVersiculo)
                         })
+                        this.viewVersiculos.$divVersiculosLinkados.a(this.fimElement())
+                        this.viewVersiculos.updateCountVersiculosLinkados(versiculos.length)
                     },
                     error => new Aspect(error)
-            ).get()
+                ).get()
         }
 
     }
 
-    populateViewRowEstudos(estudo){
+    populateViewRowEstudos(estudo, mark) {
         let viewRowEstudo = new ViewRowEstudo(estudo);
         this.estudos.push(viewRowEstudo)
         this.estudos.sort((a, b) => a.titulo.toLowerCase() > b.titulo.toLowerCase() ? 1 : -1)
@@ -296,69 +378,73 @@ class ControllerIndex extends JMount{
         this.enableEditEstudo(viewRowEstudo)
         this.requestChangeTituloEstudo(viewRowEstudo)
         this.requestDeleteEstudo(viewRowEstudo)
+        this.redirectoToAnotacoes(viewRowEstudo)
+        this.viewEstudos.updateNumeroEstudos(this.estudos.length)
+        mark && viewRowEstudo.$view.c('fontColorBlue')
     }
 
-    enableEditEstudo(viewRowEstudo){
+    enableEditEstudo(viewRowEstudo) {
         let spanEditarTitulo = viewRowEstudo.$spanEditarTitulo;
 
         spanEditarTitulo.showForm = false;
         viewRowEstudo.$spanEditarTitulo.onclick = _ => {
-            if(this.estudoAberto && this.estudoAberto !== viewRowEstudo){
+            if (this.estudoAberto && this.estudoAberto !== viewRowEstudo) {
                 this.estudoAberto.$spanEditarTitulo.click();
                 this.estudoAberto = null;
             }
 
             spanEditarTitulo.showForm = !spanEditarTitulo.showForm;
-            if(spanEditarTitulo.showForm){
+            if (spanEditarTitulo.showForm) {
                 viewRowEstudo.$formEditarTitulo.style.display = 'block';
                 this.estudoAberto = viewRowEstudo;
-            }else{
+            } else {
                 viewRowEstudo.$formEditarTitulo.style.display = 'none';
                 this.estudoAberto = null;
             }
         }
     }
 
-    requestChangeTituloEstudo(viewRowEstudo){
+    requestChangeTituloEstudo(viewRowEstudo) {
         viewRowEstudo.$formEditarTitulo.onsubmit = e => {
             consume(e)
             this.viewEstudos.showError('')
             let oldTitulo = viewRowEstudo.titulo,
                 newTitulo = viewRowEstudo.$inputEditarTitulo.value;
-            
+
             let hideForm = _ => {
                 viewRowEstudo.$spanEditarTitulo.click();
             }
 
-            if(oldTitulo.toLowerCase() == newTitulo.toLowerCase()){
+            if (oldTitulo.toLowerCase() == newTitulo.toLowerCase()) {
                 hideForm();
                 return
             }
 
             let hasEstudo = this.estudos.filter(estudo => estudo.titulo.toLowerCase() == newTitulo.toLowerCase()).length > 0;
-            if(hasEstudo){
+            if (hasEstudo) {
                 this.viewEstudos.showError('Já existe um estudo com esse título.')
                 return;
             }
 
             let enderessable = API_BIBLIA.toEstudos(),
                 data = {
-                    id: viewRowEstudo.id, 
+                    id: viewRowEstudo.id,
                     titulo: newTitulo
                 };
-            
+
             JRequest.prepare(enderessable, data)
                 .inResponse(
                     _ => {
                         viewRowEstudo.titulo = newTitulo;
                         viewRowEstudo.$txtTitulo.t(newTitulo)
-                        hideForm();},
+                        hideForm();
+                    },
                     error => new Aspect(error)
-            ).put()   
+                ).put()
         }
     }
 
-    requestDeleteEstudo(viewRowEstudo){
+    requestDeleteEstudo(viewRowEstudo) {
         viewRowEstudo.$spanExcluirEstudo.onclick = _ => {
             let title = "Atenção",
                 message = "Confirma a exclusão deste estudo?";
@@ -372,25 +458,25 @@ class ControllerIndex extends JMount{
                             this.populateEstudos(this.estudos)
                         },
                         error => new Aspect(error)
-                ).delete()
+                    ).delete()
             }).show();
-            
+
         }
     }
 
-    eventPesquisarEstudos(){
+    eventPesquisarEstudos() {
         let inputPesquisarEstudo = this.viewEstudos.$inputPesquisarEstudo;
 
         inputPesquisarEstudo.onkeypress = e => {
             let textSearch = inputPesquisarEstudo.value;
 
-            if(e.key == 'Enter' && this.loadEstudos){
+            if (e.key == 'Enter' && this.loadEstudos) {
 
-                if(!textSearch){
+                if (!textSearch) {
                     this.populateEstudos(this.estudos)
                     return;
                 }
-    
+
                 let estudosPesquisados = this.estudos.filter(estudo => this.matchText(textSearch, estudo.titulo))
                 this.populateEstudos(estudosPesquisados)
             }
@@ -398,12 +484,12 @@ class ControllerIndex extends JMount{
 
     }
 
-    matchText(textSearch, targetText){
+    matchText(textSearch, targetText) {
         let tokens = textSearch.split(' ');
         let counter = 0;
 
-        for(let token of tokens){
-            if(targetText.toLowerCase().includes(token.toLowerCase())){
+        for (let token of tokens) {
+            if (targetText.toLowerCase().includes(token.toLowerCase())) {
                 counter++
             }
         }
@@ -411,12 +497,14 @@ class ControllerIndex extends JMount{
         return counter == tokens.length
     }
 
-    populateEstudos(estudos){
-        removeChildren(this.viewEstudos.$divEstudos)
-        estudos.forEach(estudo => this.viewEstudos.$divEstudos.a(estudo))            
+    populateEstudos(estudos) {
+        let divEstudos = this.viewEstudos.$divEstudos;
+        removeChildren(divEstudos)
+        estudos.forEach(estudo => divEstudos.a(estudo))
+        estudos.length > 0 && divEstudos.a(this.fimElement())
     }
 
-    requestDeleteVersiculoEstudo(viewRowVersiculo, viewRowEstudo){
+    requestDeleteVersiculoEstudo(viewRowVersiculo, viewRowEstudo) {
         viewRowVersiculo.$spanExcluir.onclick = _ => {
             let title = "Atenção",
                 message = "Confirma a exclusão deste versículo deste estudo?";
@@ -430,9 +518,62 @@ class ControllerIndex extends JMount{
                     .inResponse(
                         _ => disapend(viewRowVersiculo),
                         error => new Aspect(error)
-                ).delete()
+                    ).delete()
             }).show();
         }
     }
+
+    redirectoToAnotacoes(viewRowEstudo) {
+        viewRowEstudo.$txtTitulo.onclick = _ => {
+            API_BIBLIA.setEstudo({ id: viewRowEstudo.id, titulo: viewRowEstudo.titulo })
+            redirect('anotacoes')
+        }
+    }
+
+    setFitilho() {
+        let livro = this.viewPesquisa.$inputSelectLivros.value,
+            capitulo = this.viewPesquisa.$inputNumeroCapitulo.value;
+        API_BIBLIA.setFitilho({ livro, capitulo })
+    }
+
+    loadFitilho() {
+        let fitilho = API_BIBLIA.getFitilho();
+        if (fitilho) {
+            this.selectedLivro = this.livros.filter(livro => livro.id == fitilho.livro)[0]
+            this.viewPesquisa.$inputSelectLivros.value = fitilho.livro
+            this.viewPesquisa.$inputNumeroCapitulo.value = fitilho.capitulo
+            this.updateFieldNumeroCapitulos()
+            this.getVersiculos()
+            return true
+        }
+    }
+
+    fimElement(){
+        return E.p().t('--FIM--').c('centerText', 'fontColorRed')
+    }
+
+    navigateToLivroCapituloVersiculo(viewRowVersiculo) {
+        
+        let {livro, verso, capitulo} = viewRowVersiculo,
+            {id: livroId} = livro || {},
+            hasNavigation = livroId > -1 && capitulo && verso;
+
+        viewRowVersiculo.$txtInfo.onclick = _ => {
+
+            if(hasNavigation){
+                this.viewPesquisa.$inputSelectLivros.value = livroId
+                this.viewPesquisa.$inputNumeroCapitulo.value = capitulo
+                this.selectedLivro = this.livros.filter(livroFilter => livroFilter.id == livroId)[0]
+                this.currentIdVersiculoSelecionado = viewRowVersiculo.id
+                this.updateFieldNumeroCapitulos()
+                this.getVersiculos()
+            }
+        }
+
+        if(!hasNavigation){
+            viewRowVersiculo.$txtInfo.rmc('cursorPointer')
+        }
+    }
+
 
 }
